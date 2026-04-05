@@ -57,6 +57,7 @@ async function main() {
 
   // 2. Start temp server
   console.log('ℹ Starting temporary server...');
+  const isWin = process.platform === 'win32';
   const serverProc = spawn('node', [
     './node_modules/@teamvelix/cli/dist/index.js', 'dev'
   ], {
@@ -64,6 +65,7 @@ async function main() {
     stdio: 'pipe',
     env: { ...process.env, PORT: String(PORT) },
     shell: true,
+    detached: !isWin,
   });
 
   let serverOutput = '';
@@ -101,8 +103,14 @@ async function main() {
   } finally {
     // Kill server and all child processes
     try { serverProc.kill('SIGTERM'); } catch {}
+    // Cross-platform force kill
+    const isWin = process.platform === 'win32';
     try {
-      spawn('taskkill', ['/pid', String(serverProc.pid), '/f', '/t'], { shell: true, stdio: 'ignore' });
+      if (isWin) {
+        spawn('taskkill', ['/pid', String(serverProc.pid), '/f', '/t'], { shell: true, stdio: 'ignore' });
+      } else {
+        process.kill(-serverProc.pid, 'SIGKILL');
+      }
     } catch {}
     // Force exit after cleanup
     setTimeout(() => process.exit(0), 500);
