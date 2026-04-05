@@ -1,0 +1,37 @@
+{
+  "version": 2,
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
+  "installCommand": "npm install",
+  "framework": null,
+  "outputDirectory": ".velix/build",
+  "regions": ["iad1"],
+  "env": {
+    "NODE_VERSION": "18"
+  },
+  "build": {
+    "env": {
+      "NODE_ENV": "production"
+    }
+  },
+  "routes": [
+    {
+      "src": "/favicon.webp",
+      "dest": "/favicon.webp"
+    },
+    {
+      "src": "/tailwind.css",
+      "dest": "/tailwind.css"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/api/serverless"
+    }
+  ],
+  "functions": {
+    "api/serverless.js": {
+      "runtime": "nodejs18.x",
+      "maxDuration": 10
+    }
+  }
+}
