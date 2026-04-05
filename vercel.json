@@ -1,29 +1,23 @@
 {
   "version": 2,
   "buildCommand": "npm run build",
-  "devCommand": "npm run dev",
   "installCommand": "npm install",
+  "outputDirectory": "out",
   "framework": null,
-  "regions": ["iad1"],
-  "env": {
-    "NODE_VERSION": "18"
-  },
-  "build": {
-    "env": {
-      "NODE_ENV": "production"
-    }
-  },
-  "rewrites": [
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "headers": [
     {
-      "source": "/(.*)",
-      "destination": "/api/serverless"
+      "source": "/tailwind.css",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    },
+    {
+      "source": "/favicon.webp",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
     }
-  ],
-  "functions": {
-    "api/serverless.js": {
-      "runtime": "nodejs18.x",
-      "maxDuration": 10,
-      "memory": 1024
-    }
-  }
+  ]
 }

@@ -1,7 +1,7 @@
 node_modules/
 .velix/
 dist/
-build/
+out/
 .vercel/
 *.log
 npm-debug.log*
