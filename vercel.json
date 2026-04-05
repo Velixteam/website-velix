@@ -4,7 +4,6 @@
   "devCommand": "npm run dev",
   "installCommand": "npm install",
   "framework": null,
-  "outputDirectory": ".velix/build",
   "regions": ["iad1"],
   "env": {
     "NODE_VERSION": "18"
@@ -14,24 +13,17 @@
       "NODE_ENV": "production"
     }
   },
-  "routes": [
+  "rewrites": [
     {
-      "src": "/favicon.webp",
-      "dest": "/favicon.webp"
-    },
-    {
-      "src": "/tailwind.css",
-      "dest": "/tailwind.css"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/api/serverless"
+      "source": "/(.*)",
+      "destination": "/api/serverless"
     }
   ],
   "functions": {
     "api/serverless.js": {
       "runtime": "nodejs18.x",
-      "maxDuration": 10
+      "maxDuration": 10,
+      "memory": 1024
     }
   }
 }
