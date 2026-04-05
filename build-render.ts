@@ -44,7 +44,7 @@ async function main() {
 
   // 2. Start Velix server directly (no CLI layer)
   console.log('ℹ Starting Velix server...');
-  const { server, config } = await createServer({ projectRoot, mode: 'development' }) as any;
+  const { server, config } = await createServer({ projectRoot, mode: 'production' }) as any;
 
   const port = config?.server?.port || 3000;
   const host = config?.server?.host || 'localhost';
