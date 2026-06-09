@@ -10,7 +10,7 @@ export function NpmCounter() {
     fetch('https://api.npmjs.org/downloads/point/last-month/@teamvelix/velix')
       .then((res) => res.json())
       .then((data) => {
-        if (data && data.downloads) {
+        if (data && typeof data.downloads === 'number') {
           setDownloads(data.downloads);
         }
       })
