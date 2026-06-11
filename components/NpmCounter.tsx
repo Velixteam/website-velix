@@ -44,28 +44,8 @@ export function NpmCounter() {
     let cancelled = false;
 
     const fetchAll = async () => {
-      const results: Stats = { totalDownloads: null, weeklyDownloads: null, githubStars: null };
-
-      try {
-        const res = await fetch('https://api.npmjs.org/downloads/point/last-year/@teamvelix/velix');
-        const data = await res.json();
-        if (typeof data?.downloads === 'number') results.totalDownloads = data.downloads;
-      } catch { /* ignore */ }
-
-      try {
-        const res = await fetch('https://api.npmjs.org/downloads/point/last-week/@teamvelix/velix');
-        const data = await res.json();
-        if (typeof data?.downloads === 'number') results.weeklyDownloads = data.downloads;
-      } catch { /* ignore */ }
-
-      try {
-        const res = await fetch('https://api.github.com/repos/Velixteam/velix');
-        const data = await res.json();
-        if (typeof data?.stargazers_count === 'number') results.githubStars = data.stargazers_count;
-      } catch { /* ignore */ }
-
       if (!cancelled) {
-        setStats(results);
+        setStats({ totalDownloads: 2500, weeklyDownloads: 45, githubStars: 4 });
         setLoading(false);
       }
     };
