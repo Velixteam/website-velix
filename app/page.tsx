@@ -33,7 +33,8 @@ export default function HomePage() {
           <div className="flex flex-col md:flex-row items-center gap-10 md:gap-12">
 
             {/* LEFT: Image — fixed width so it doesn't push text off */}
-            <div className="shrink-0 w-[280px] md:w-[380px] lg:w-[480px] animate-fade-in-up">
+            {/* Texte — reste à gauche */}
+            <div className="flex-1 flex flex-col items-start text-left min-w-0 order-1">
               <img
                 src="/velix-removebg-preview.png"
                 alt="Velix Hero"
