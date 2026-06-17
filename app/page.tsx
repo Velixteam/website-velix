@@ -32,16 +32,6 @@ export default function HomePage() {
         <div className="relative z-10 w-full max-w-7xl mx-auto py-16">
           <div className="flex flex-col md:flex-row items-center gap-10 md:gap-12">
 
-            {/* LEFT: Image — fixed width so it doesn't push text off */}
-            {/* Texte — reste à gauche */}
-            <div className="flex-1 flex flex-col items-start text-left min-w-0 order-1">
-              <img
-                src="/velix-removebg-preview.png"
-                alt="Velix Hero"
-                className="w-full h-full object-contain drop-shadow-2xl"
-              />
-            </div>
-
             {/* RIGHT: Text Content */}
             <div className="flex-1 flex flex-col items-start text-left min-w-0">
               {/* Beta Badge */}
@@ -86,6 +76,14 @@ export default function HomePage() {
                 </a>
               </div>
             </div>
+            <div className="shrink-0 w-[280px] md:w-[400px] lg:w-[520px] animate-fade-in-up">
+              <img
+                src="/velix-removebg-preview.png"
+                alt="Velix Hero"
+                className="w-full h-auto object-contain drop-shadow-2xl"
+              />
+            </div>
+
 
           </div>
         </div>
