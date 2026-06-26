@@ -2,21 +2,58 @@
  * Velix Static Renderer
  * Run with: npx tsx build-render.ts
  * 
- * 1. Starts Velix server
- * 2. Fetches all page routes as HTML
- * 3. Saves them to out/ directory
- * 4. Copies public assets
- * 5. Exits
+ * 1. Scans app/ for all page.tsx files
+ * 2. Starts Velix server
+ * 3. Fetches all page routes as HTML
+ * 4. Saves them to out/ directory
+ * 5. Copies public assets
+ * 6. Exits
  */
 
 import { createServer } from '@teamvelix/velix/server';
+import { pluginManager, PluginHooks } from '@teamvelix/velix';
 import fs from 'fs';
 import path from 'path';
 
 const projectRoot = process.cwd();
 const OUT_DIR = path.join(projectRoot, 'out');
 const PUBLIC_DIR = path.join(projectRoot, 'public');
-const ROUTES = ['/', '/docs', '/compare'];
+const APP_DIR = path.join(projectRoot, 'app');
+
+/**
+ * Recursively scan the app/ directory for page.tsx files
+ * and convert them to URL routes.
+ * 
+ *   app/page.tsx           → /
+ *   app/docs/page.tsx      → /docs
+ *   app/docs/routing/page.tsx → /docs/routing
+ *   app/compare/page.tsx   → /compare
+ */
+function discoverRoutes(dir: string, base = ''): string[] {
+  const routes: string[] = [];
+  if (!fs.existsSync(dir)) return routes;
+
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+
+  // Check if this directory has a page.tsx / page.jsx
+  const hasPage = entries.some(e => 
+    !e.isDirectory() && /^page\.(tsx|jsx|ts|js)$/.test(e.name)
+  );
+
+  if (hasPage) {
+    routes.push(base || '/');
+  }
+
+  // Recurse into subdirectories
+  for (const entry of entries) {
+    if (entry.isDirectory() && !entry.name.startsWith('_') && !entry.name.startsWith('.')) {
+      const subBase = `${base}/${entry.name}`;
+      routes.push(...discoverRoutes(path.join(dir, entry.name), subBase));
+    }
+  }
+
+  return routes;
+}
 
 function cleanDir(dir: string) {
   if (fs.existsSync(dir)) fs.rmSync(dir, { recursive: true });
@@ -38,6 +75,10 @@ async function main() {
   console.log('⚡ Velix Static Build');
   console.log('─'.repeat(40));
 
+  // 0. Discover routes
+  const ROUTES = discoverRoutes(APP_DIR);
+  console.log(`ℹ Discovered ${ROUTES.length} route(s): ${ROUTES.join(', ')}`);
+
   // 1. Clean output
   cleanDir(OUT_DIR);
   console.log('✔ Cleaned output directory');
@@ -45,6 +86,10 @@ async function main() {
   // 2. Start Velix server directly (no CLI layer)
   console.log('ℹ Starting Velix server...');
   const { server, config } = await createServer({ projectRoot, mode: 'production' }) as any;
+
+  // Run build:start hook (e.g., Tailwind CSS build)
+  console.log('ℹ Running build hooks...');
+  await pluginManager.runHook(PluginHooks.BUILD_START);
 
   const port = config?.server?.port || 3000;
   const host = config?.server?.host || 'localhost';
@@ -55,6 +100,8 @@ async function main() {
   console.log(`✔ Server ready at ${baseUrl}`);
 
   // 3. Fetch and save all routes
+  let rendered = 0;
+  let failed = 0;
   for (const route of ROUTES) {
     try {
       const res = await fetch(`${baseUrl}${route}`);
@@ -67,8 +114,10 @@ async function main() {
       fs.mkdirSync(path.dirname(outPath), { recursive: true });
       fs.writeFileSync(outPath, html);
       console.log(`✔ Pre-rendered: ${route} → ${path.relative(projectRoot, outPath)}`);
+      rendered++;
     } catch (err: any) {
       console.error(`✖ Failed to render ${route}: ${err.message}`);
+      failed++;
     }
   }
 
@@ -78,7 +127,7 @@ async function main() {
 
   // 5. Summary
   console.log('─'.repeat(40));
-  console.log(`✔ Static build complete → out/`);
+  console.log(`✔ Static build complete → out/ (${rendered} rendered, ${failed} failed)`);
 
   // 6. Shutdown
   server.close(() => process.exit(0));
