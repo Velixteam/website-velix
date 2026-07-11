@@ -10,7 +10,7 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
         <div className="max-w-7xl mx-auto px-6 py-16">
           <div className="flex items-center gap-3 mb-6">
             <span className="text-xs font-bold px-3 py-1 rounded-full bg-[rgba(0,232,122,0.1)] text-velix-cyan border border-[rgba(0,232,122,0.2)]">
-              v5.3.0 stable
+              v5.3.1 stable
             </span>
             <a href="#" className="text-xs font-bold px-3 py-1 rounded-full bg-velix-dark/40 text-[#6b7068] border border-white/5 hover:text-white transition-colors">
               Changelog
@@ -45,3 +45,4 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
     </div>
   );
 }
+
