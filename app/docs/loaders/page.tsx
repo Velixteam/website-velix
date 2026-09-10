@@ -1,59 +1,94 @@
 import React from 'react';
 import { Section, P, CodeBlock, Callout, IC, PageNavigation } from "../../../components/DocsComponents";
 
-export const metadata = { title: "Loaders - Velix Documentation" };
+export const metadata = {
+  title: "Data Loaders - Velix Documentation",
+  description: "Learn how to fetch SSR data securely with Velix Loaders."
+};
 
 export default function LoadersPage() {
   return (
     <>
-      <div className="text-sm text-slate-500 mb-8 font-mono">
-        Docs <span className="mx-2">/</span> Server <span className="mx-2">/</span> <span className="text-velix-cyan">Loaders</span>
+      <div className="flex items-center gap-2 text-xs text-[#6b7068] mb-8 font-mono">
+        <a href="/docs" className="hover:text-[#00e87a] transition-colors">Docs</a>
+        <span>/</span>
+        <span>Server</span>
+        <span>/</span>
+        <span className="text-[#00e87a] font-medium">Data Loaders</span>
       </div>
 
-      <Section title="Data Fetching with Loaders">
-        <P>Loaders are the primary way to fetch data for Server-Side Rendering (SSR) in Velix. They run securely on the server before a page is rendered.</P>
-        
-        <h3 className="text-xl font-bold text-white mb-4 mt-8">Defining a Loader</h3>
-        <P>Create a loader in the <IC>server/loaders/</IC> directory using the <IC>defineLoader</IC> utility.</P>
-        <CodeBlock filename="server/loaders/post.ts">{`import { defineLoader, NotFoundError } from 'velix/server';
+      <div className="mb-10">
+        <h1 className="text-3xl md:text-4xl font-black text-white mb-4 tracking-tight">
+          Data Fetching with Loaders
+        </h1>
+        <P>
+          Loaders are the fundamental mechanism for fetching data during Server-Side Rendering (SSR) in Velix. They run securely on the server before HTML is streamed to the user.
+        </P>
+      </div>
+
+      {/* Defining a Loader */}
+      <Section id="defining-loaders" title="Defining a Loader">
+        <P>
+          Create loaders in the <IC>server/loaders/</IC> directory using <IC>defineLoader</IC>.
+        </P>
+
+        <CodeBlock filename="server/loaders/blog.ts">{`import { defineLoader, NotFoundError } from 'velix/server';
 import { db } from '../lib/db';
 
-export const postLoader = defineLoader(async (req, { params }) => {
-  const post = await db.posts.find(params.slug);
-  
-  if (!post) {
-    throw new NotFoundError();
-  }
-  
-  return { post };
-});`}</CodeBlock>
+export const blogPostLoader = defineLoader(async (req, { params }) => {
+  const post = await db.posts.findUnique({
+    where: { slug: params.slug },
+    include: { author: true, comments: true }
+  });
 
-        <h3 className="text-xl font-bold text-white mb-4 mt-8">Using a Loader in a Page</h3>
-        <P>Export the loader from your page component and use <IC>InferLoaderData</IC> for end-to-end type safety.</P>
-        <CodeBlock filename="app/blog/[slug]/page.tsx">{`import { postLoader } from '../../../server/loaders/post';
+  if (!post) {
+    throw new NotFoundError('Blog post not found');
+  }
+
+  return {
+    post,
+    readTime: Math.ceil(post.content.length / 1000)
+  };
+});`}</CodeBlock>
+      </Section>
+
+      {/* Connecting Loader to Page */}
+      <Section id="using-loaders" title="Binding Loader to a Page">
+        <P>
+          Export the loader as <IC>loader</IC> from your page file and infer its return type using <IC>InferLoaderData</IC>:
+        </P>
+
+        <CodeBlock filename="app/blog/[slug]/page.tsx">{`import { blogPostLoader } from '../../../server/loaders/blog';
 import type { InferLoaderData } from 'velix/server';
 
-export const loader = postLoader;
+// 1. Export the server loader binding
+export const loader = blogPostLoader;
 
-export default function BlogPost({ data }: { data: InferLoaderData<typeof loader> }) {
-  // data.post is fully typed here!
+// 2. Consume typed data prop in your React component
+export default function BlogPostPage({ data }: { data: InferLoaderData<typeof loader> }) {
+  // data.post and data.readTime are 100% autocompleted & type-checked!
   return (
-    <article>
-      <h1>{data.post.title}</h1>
-      <p>{data.post.content}</p>
+    <article className="max-w-3xl mx-auto py-12">
+      <h1 className="text-4xl font-extrabold text-white">{data.post.title}</h1>
+      <p className="text-sm text-[#00e87a] mt-2">Read time: {data.readTime} min</p>
+      <div className="mt-6 text-[#a0a69c] leading-relaxed">
+        {data.post.content}
+      </div>
     </article>
   );
 }`}</CodeBlock>
-        
-        <Callout type="tip" title="Why server/loaders?">
-          Keeping your data fetching logic in the <IC>server/</IC> directory ensures that server-side secrets (like database credentials or API keys) are never accidentally leaked to the client bundle.
-        </Callout>
-
       </Section>
 
-      <PageNavigation 
+      {/* Benefits */}
+      <Section id="security" title="Security & Bundle Optimization">
+        <Callout type="tip" title="Why server/loaders?">
+          Because loader code lives in <IC>server/loaders/</IC>, heavy ORMs (Prisma, Drizzle, Kysely), database connection pools, and secret tokens are <strong>never bundled into browser JavaScript</strong>. The client only receives the final JSON data.
+        </Callout>
+      </Section>
+
+      <PageNavigation
         prev={{ title: "API Routes", href: "/docs/api-routes" }}
-        next={{ title: "Server Actions", href: "/docs/actions" }} 
+        next={{ title: "Server Actions", href: "/docs/actions" }}
       />
     </>
   );

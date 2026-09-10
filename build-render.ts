@@ -92,7 +92,8 @@ async function main() {
   console.log('ℹ Running build hooks...');
   await pluginManager.runHook(PluginHooks.BUILD_START);
 
-  const port = config?.server?.port || 3000;
+  const addr = server.address();
+  const port = (typeof addr === 'object' && addr?.port) ? addr.port : (process.env.PORT || 3009);
   const host = config?.server?.host || 'localhost';
   const baseUrl = `http://${host}:${port}`;
 
