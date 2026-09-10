@@ -9,10 +9,10 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
       <div className="border-b border-white/5 bg-velix-deep">
         <div className="max-w-7xl mx-auto px-6 py-16">
           <div className="flex items-center gap-3 mb-6">
-            <span className="text-xs font-bold px-3 py-1 rounded-full bg-[rgba(0,232,122,0.1)] text-velix-cyan border border-[rgba(0,232,122,0.2)]">
-              v5.3.1 stable
+            <span className="text-xs font-bold px-3 py-1 rounded-full bg-[rgba(0,232,122,0.1)] text-[#00e87a] border border-[rgba(0,232,122,0.2)] font-mono">
+              v5.3.2 stable
             </span>
-            <a href="#" className="text-xs font-bold px-3 py-1 rounded-full bg-velix-dark/40 text-[#6b7068] border border-white/5 hover:text-white transition-colors">
+            <a href="#" className="text-xs font-bold px-3 py-1 rounded-full bg-[#111211] text-[#6b7068] border border-[#1e201e] hover:text-white transition-colors">
               Changelog
             </a>
           </div>
@@ -28,7 +28,7 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
             </div>
             <input
               type="text"
-              className="block w-full pl-10 pr-3 py-3 border border-white/5 rounded-xl leading-5 bg-velix-dark/40 text-[#e8ebe5] placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-velix-cyan focus:border-velix-cyan sm:text-sm transition-all"
+              className="block w-full pl-10 pr-3 py-3 border border-[#1e201e] rounded-xl leading-5 bg-[#111211] text-[#e8ebe5] placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-[#00e87a] focus:border-[#00e87a] sm:text-sm transition-all"
               placeholder="Search documentation..."
             />
           </div>

@@ -83,8 +83,9 @@ async function main() {
   cleanDir(OUT_DIR);
   console.log('✔ Cleaned output directory');
 
-  // 2. Start Velix server directly (no CLI layer)
+  // 2. Start Velix server directly (no CLI layer) on dedicated build port
   console.log('ℹ Starting Velix server...');
+  process.env.PORT = process.env.PORT || '3009';
   const { server, config } = await createServer({ projectRoot, mode: 'production' }) as any;
 
   // Run build:start hook (e.g., Tailwind CSS build)

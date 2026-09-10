@@ -39,7 +39,7 @@ export function P({ children }: { children: React.ReactNode }) {
 }
 
 export function IC({ children }: { children: React.ReactNode }) {
-  return <code className="text-sm px-1.5 py-0.5 rounded bg-velix-dark/40 text-velix-cyan font-mono border border-white/5 break-words">{children}</code>;
+  return <code className="text-sm px-1.5 py-0.5 rounded bg-[#111211] text-[#00e87a] font-mono border border-[#1e201e] break-words">{children}</code>;
 }
 
 export function Callout({ type, title, children }: { type: "info" | "warning" | "danger" | "tip"; title?: string; children: React.ReactNode }) {
@@ -47,10 +47,10 @@ export function Callout({ type, title, children }: { type: "info" | "warning" | 
     info: "border-[#3b82f6] bg-[rgba(59,130,246,0.05)]",
     warning: "border-[#f59e0b] bg-[rgba(245,158,11,0.05)]",
     danger: "border-[#ff6b6b] bg-[rgba(255,107,107,0.05)]",
-    tip: "border-velix-cyan bg-[rgba(0,232,122,0.05)]"
+    tip: "border-[#00e87a] bg-[rgba(0,232,122,0.05)]"
   };
   const icons = { info: "ℹ️", warning: "⚠️", danger: "🛑", tip: "💡" };
-  const titleColors = { info: "text-[#3b82f6]", warning: "text-[#f59e0b]", danger: "text-[#ff6b6b]", tip: "text-velix-cyan" };
+  const titleColors = { info: "text-[#3b82f6]", warning: "text-[#f59e0b]", danger: "text-[#ff6b6b]", tip: "text-[#00e87a]" };
 
   return (
     <div className={`border-l-4 ${styles[type]} rounded-r-xl p-4 my-6`}>

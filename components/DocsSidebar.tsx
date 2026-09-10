@@ -7,7 +7,7 @@ function SidebarLink({ href, children }: { href: string; children: React.ReactNo
   const active = pathname === href || (pathname === '/docs' && href === '/docs');
 
   return (
-    <Link href={href} className={`block text-sm py-1.5 px-3 rounded-lg transition-colors ${active ? "text-velix-cyan bg-velix-cyan/5 font-medium" : "text-slate-400 hover:text-slate-200 hover:bg-white/5"}`}>
+    <Link href={href} className={`block text-sm py-1.5 px-3 rounded-lg transition-colors ${active ? "text-[#00e87a] bg-[#00e87a]/10 font-medium" : "text-[#6b7068] hover:text-[#e8ebe5] hover:bg-white/5"}`}>
       {children}
     </Link>
   );
